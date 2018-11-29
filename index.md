@@ -1,4 +1,4 @@
-## Welcome to GitHub Pages
+## Chào mừng đến webiste Facebook-Tool
 
 You can use the [editor on GitHub](https://github.com/kenthudoan/Facebook-Tool/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
 
@@ -9,7 +9,7 @@ Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://j
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
 ```markdown
-Tool facebook by kenthudoan
+Dưới đây là những webiste tool của tôi!
 ```
 [Block uid](https://kenthudoan.github.io/Facebook-Tool/block-uid.html) |
 [Confirm reject and remove friends](https://kenthudoan.github.io/Facebook-Tool/confirm-reject-and-remove-friends.html) |
