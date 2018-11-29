@@ -9,21 +9,16 @@ Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://j
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
 ```markdown
-Syntax highlighted code block
+Tool facebook by kenthudoan
+[Block uid](https://kenthudoan.github.io/Facebook-Tool/block-uid.html)
+[Confirm reject and remove friends](https://kenthudoan.github.io/Facebook-Tool/confirm-reject-and-remove-friends.html)
+[Delete albums](https://kenthudoan.github.io/Facebook-Tool/delete-albums.html)
+[Get cookies from access token](https://kenthudoan.github.io/Facebook-Tool/get-cookies-from-access-token.html)
+[Get session for app](https://kenthudoan.github.io/Facebook-Tool/get-session-for-app.html)
+[Remove adaccounts no payment](https://kenthudoan.github.io/Facebook-Tool/remove-adaccounts-no-payment.html)
+[Send inbox to one id](https://kenthudoan.github.io/Facebook-Tool/send-inbox-to-one-id.html)
+[Share post to friends online](https://kenthudoan.github.io/Facebook-Tool/share-post-to-friends-online.html)
 
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
 ```
 
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
