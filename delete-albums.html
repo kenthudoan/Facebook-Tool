@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Document</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body style="padding-top: 50px;">
+	<div class="container">
+		<div class="panel panel-primary">
+			<div class="panel-heading">Xóa ảnh khỏi trang cá nhân</div>
+			<div class="panel-body">
+				<input id="access_token" class="form-control" placeholder="Nhập Access Token ...">
+				<br>
+				<select id="list_albums" class="form-control" disabled=""></select>
+				<div class="col-md-12 text-center" style="font-size: 50px;">
+					<div class="col-md-6" style="color: green" id="success">0</div>
+					<div class="col-md-6" style="color: red" id="error">0</div>
+				</div>
+			</div>
+			<div class="panel-footer">
+				<div class="text-center">
+					<button class="btn btn-success" id="load_albums" data-loading-text="Đang gửi ...">Lấy danh sách albums</button>
+					<button class="btn btn-primary" id="load_photos" data-loading-text="Đang gửi ...">Xem tất cả ảnh</button>
+					<button class="btn btn-danger" id="delete_photos" data-loading-text="Đang gửi ...">Xóa ảnh đã chọn</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<table class="table table-bordered table-hover">
+				<thead>
+					<tr>
+						<th class="text-center" width="10%">Thứ tự</th>
+						<th class="text-center" width="15%">Chọn tất cả <input type="checkbox" id="checkall"></th>
+						<th class="text-center" width="30%">Ảnh</th>
+						<th class="text-center" width="25%">Caption</th>
+						<th class="text-center" width="20%">Chi tiết</th>
+					</tr>
+				</thead>
+				<tbody id="table"></tbody>
+			</table>
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		jQuery(document).ready(function($) {
+			var access_token;
+			$("#load_albums").click(function() {
+				access_token = $("#access_token").val().trim();
+				$(this).button('loading');
+				$.get('https://graph.facebook.com/me/albums', {
+					locale: 'vi_VN',
+					access_token: access_token
+				}).done(e => {
+					e.data.forEach(item => {
+						$("#list_albums").append(`<option value="${item.id}">${item.name} (${item.count} ảnh)</option>`);
+					});
+					$("#list_albums").removeAttr('disabled');
+					$("#load_albums").button('reset');
+				}).error(err => {
+					$("#load_albums").button('reset');
+					alert('Access Token không hợp lệ !');
+				});
+			});
+			$("#load_photos").click(function() {
+				$("#load_photos").button('loading');
+				getPhotos('https://graph.facebook.com/v2.9/' + $("#list_albums").val() + '/photos?fields=id,name,created_time,picture,likes.limit(0).summary(1),comments.limit(0).summary(1)');
+			});
+			$("#delete_photos").click(function() {
+				var inLoop   = 0;
+				var checkbox = $("#table input:checkbox:enabled:checked");
+				if (checkbox.length) {
+					$(this).button('loading');
+					$.each(checkbox, function() {
+						remove_photos($(this).val(), function(status) {
+							++inLoop;
+							if (status) {
+								$("#success").text(~~$("#success").text() + 1);
+							} else {
+								$("#error").text(~~$("#error").text() + 1);
+							}
+							if (inLoop == checkbox.length) {
+								$("#delete_photos").button('reset');
+							}
+						});
+					});
+				} else {
+					alert("Chưa chọn tài khoản !");
+				}
+			});
+
+			$("#checkall").click(function() {
+				$("#table input:checkbox:enabled").prop("checked", $(this).prop("checked"));
+			});
+
+			$(document).on("click", "td", function(e) {
+				if (!$(e.target).is(":checkbox") && $(this).find("input:checkbox").length) {
+					if ($(this).find("input:checkbox").is(":checked")) {
+						$(this).find("input:checkbox").prop("checked", false);
+					} else {
+						$(this).find("input:checkbox").prop("checked", true);
+					}
+				}
+			});
+
+			function timeConverter(UNIX_timestamp){
+				var a = new Date(UNIX_timestamp * 1000);
+				var year = a.getFullYear();
+				var month = a.getMonth() + 1;
+				var date = a.getDate();
+				var time = date + '-' + month + '-' + year;
+				return time;
+			}
+
+			function getPhotos(url) {
+				$.get(url, {
+					date_format: 'U',
+					limit: '100',
+					access_token: access_token
+				}).done(function(e) {
+					e.data.forEach(function(item, index) {
+						$("#table").append(`<tr><td class="text-center">${$("#table tr").length + 1}</td><td class="text-center"><input type="checkbox" value="${item.id}"></td><td class="text-center"><img src="${item.picture}"></td><td>${item.name ? item.name : ''}</td><td>Time: ${timeConverter(item.created_time)}<br>Like: ${item.likes ? item.likes.summary.total_count : 0}<br>Comment: ${item.comments ? item.comments.summary.total_count : 0}</td></tr>`);
+					});
+					if (e.paging && e.paging.next) {
+						getPhotos(e.paging.next);
+					} else {
+						$("#load_photos").button('reset');
+					}
+				}).error(function() {
+					$("#load_photos").button('reset');
+					alert('Access Token không hợp lệ !');
+				})
+			}
+
+			function remove_photos(photo_id, callback) {
+				$.get("https://graph.facebook.com/" + photo_id, {
+					method: 'delete',
+					access_token: access_token
+				}).done(function() {
+					callback(true);
+				}).error(function() {
+					callback(false);
+				});
+			}
+		});
+	</script>
+</body>
+</html>
