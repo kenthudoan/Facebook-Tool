@@ -19,6 +19,7 @@ Dưới đây là những webiste tool của tôi!
 [Remove adaccounts no payment](https://kenthudoan.github.io/Facebook-Tool/remove-adaccounts-no-payment.html) |
 [Send inbox to one id](https://kenthudoan.github.io/Facebook-Tool/send-inbox-to-one-id.html) |
 [Share post to friends online](https://kenthudoan.github.io/Facebook-Tool/share-post-to-friends-online.html) |
+[Filter Friends Not Interacting](https://kenthudoan.github.io/Facebook-Tool/loc-friends.html) |
 
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
